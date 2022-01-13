@@ -14,8 +14,9 @@ ESX.RegisterUsableItem('darkUSB', function(source) {
   }
 });
 
-onNet('dfs_weaponTruckRobbery:Reward', async (minMoney, maxMoney) => {
-  console.log('I ran')
+onNet('dfs_weaponTruckRobbery:Reward', async () => {
+  const minMoney = cfg.settings.rewardSettings.minCashReward;
+  const maxMoney = cfg.settings.rewardSettings.maxCashReward;
   const xPlayer = ESX.GetPlayerFromId(source);
   const moneyReward = Math.floor(Math.random() * (maxMoney - minMoney + 1)) + minMoney;
   xPlayer.addMoney(moneyReward);
@@ -25,7 +26,3 @@ onNet('dfs_weaponTruckRobbery:Reward', async (minMoney, maxMoney) => {
   xPlayer.addInventoryItem(cfg.settings.rewardSettings.items[itemRoll], itemAmount);
   emitNet('mythic_notify:client:SendAlert', source, {type: 'inform', text: `You have received Weapon Materials`});
 });
-
-RegisterCommand('test', (min, max) => {
-  emitNet('dfs_weaponTruckRobbery:Reward', min, max);
-}, false);

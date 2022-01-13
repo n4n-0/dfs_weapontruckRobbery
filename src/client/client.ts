@@ -16,6 +16,13 @@ let jobVan;
 let insideVan = false;
 let isDead = false;
 
+setImmediate(() => {
+  emit('chatAddSuggestion', '/testreward', 'Test the reward for Weapon Truck Robbery', [
+    {name: "Min Reward", help: "Minimum reward for the player"},
+    {name: "Max Reward", help: "Maximum reward for the player"}
+  ]);
+});
+
 function CreateMissionBlip(x,y,z) {
   blip = AddBlipForCoord(x,y,z);
 	SetBlipSprite(blip, 1);
@@ -201,7 +208,7 @@ on('dfs_weaponTruckRobbery:Main', async () => {
           FreezeEntityPosition(jobVan, false);
           vanDelivered = true;
           global.exports.mythic_notify.DoHudText('inform', 'Truck unloaded');
-          emitNet('dfs_weaponTruckRobbery:Reward', cfg.settings.rewardSettings.minCashReward, cfg.settings.rewardSettings.maxCashReward);
+          emitNet('dfs_weaponTruckRobbery:Reward');
           await Delay(15000);
           DeletePed(dropPed);
           emit('dfs_weaponTruckRobbery:Reset');
@@ -226,3 +233,11 @@ on('dfs_weaponTruckRobbery:Reset', async () => {
   jobVan = null;
   insideVan = false;
 });
+
+RegisterCommand('testreward', async (source, args) => {
+  if(args === undefined || args.length === 0) {
+    emitNet('dfs_weaponTruckRobbery:Reward');
+  } else {
+    global.exports.mythic_notify.DoHudText('inform', 'This command does not take any arguments');
+  }
+}, false);
