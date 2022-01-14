@@ -9,6 +9,7 @@ module.exports.settings = {
         jobVan: 'rumpo2'
     },
     rewardSettings: {
+        jobCompleted: false,
         minCashReward: 500,
         maxCashReward: 3000,
         itemMin: 10,

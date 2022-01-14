@@ -107,6 +107,7 @@ on('dfs_weaponTruckRobbery:Main', async () => {
 
   // Reset Mission
   emit('dfs_weaponTruckRobbery:Reset');
+  emitNet('dfs_weaponTruckRobbery:StartMission');
 
   // Create First Blip
   const blipCoords = cfg.locations.jobLocations.loc1.Spot;
@@ -171,6 +172,7 @@ on('dfs_weaponTruckRobbery:Main', async () => {
       if(IsPedInAnyVehicle(playerPed, false)) {
         if(GetVehiclePedIsIn(playerPed, false) == jobVan) {
           RemoveBlip(blip);
+          emitNet('dfs_weaponTruckRobbery:StartDelivery');
           deliveryBlip = CreateDeliveryBlip(deliveryLocation.Spot.x, deliveryLocation.Spot.y, deliveryLocation.Spot.z);
           global.exports.mythic_notify.DoHudText('inform', 'Head to the point marked on your GPS');
           insideVan = true;
@@ -207,8 +209,8 @@ on('dfs_weaponTruckRobbery:Main', async () => {
           TaskGoToCoordAnyMeans(dropPed, deliveryLocation.NPCSpawn.x, deliveryLocation.NPCSpawn.y, deliveryLocation.NPCSpawn.z, 1.0, 0, false, 786603, 0xbf800000);
           FreezeEntityPosition(jobVan, false);
           vanDelivered = true;
-          global.exports.mythic_notify.DoHudText('inform', 'Truck unloaded');
-          emitNet('dfs_weaponTruckRobbery:Reward');
+          global.exports.mythic_notify.DoHudText('inform', 'Thanks for the delivery! Better leave the area as fast as possible');
+          emitNet('dfs_weaponTruckRobbery:CompleteDelivery');
           await Delay(15000);
           DeletePed(dropPed);
           emit('dfs_weaponTruckRobbery:Reset');
@@ -226,6 +228,7 @@ on('esx:onPlayerDeath', (data) => {
 });
 
 on('dfs_weaponTruckRobbery:Reset', async () => { 
+  emitNet('dfs_weaponTruckRobbery:EndMission');
   vanSpawned = cfg.locations.jobLocations.loc1.VanSpawned;
   vanDelivered = cfg.locations.jobLocations.loc1.VanDelivered;
   goonsSpawned = cfg.locations.jobLocations.loc1.GoonsSpawned;
@@ -236,8 +239,24 @@ on('dfs_weaponTruckRobbery:Reset', async () => {
 
 RegisterCommand('testreward', async (source, args) => {
   if(args === undefined || args.length === 0) {
-    emitNet('dfs_weaponTruckRobbery:Reward');
+    emitNet('dfs_weaponTruckRobbery:CompleteDelivery');
   } else {
     global.exports.mythic_notify.DoHudText('inform', 'This command does not take any arguments');
   }
 }, false);
+
+// RegisterCommand('test1', async (source, args) => {
+//   if(args === undefined || args.length === 0) {
+//     emitNet('dfs_weaponTruckRobbery:StartMission');
+//   } else {
+//     global.exports.mythic_notify.DoHudText('inform', 'This command does not take any arguments');
+//   }
+// }, false);
+
+// RegisterCommand('test2', async (source, args) => {
+//   if(args === undefined || args.length === 0) {
+//     emitNet('dfs_weaponTruckRobbery:EndMission');
+//   } else {
+//     global.exports.mythic_notify.DoHudText('inform', 'This command does not take any arguments');
+//   }
+// }, false);
