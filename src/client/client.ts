@@ -223,12 +223,14 @@ on('dfs_weaponTruckRobbery:Main', async () => {
 on('esx:onPlayerDeath', (data) => {
   const jobLocation = cfg.locations.jobLocations.loc1;
   global.exports.mythic_notify.DoHudText('inform', 'You failed to steal the van and they have fled the scene');
-  emitNet('dfs_weaponTruckRobbery:Reset');
+  emit('dfs_weaponTruckRobbery:Reset');
   ClearAreaOfVehicles(jobLocation.Spot.x, jobLocation.Spot.y, jobLocation.Spot.z, 50, false, false, false, false, false);
 });
 
 on('dfs_weaponTruckRobbery:Reset', async () => { 
   emitNet('dfs_weaponTruckRobbery:EndMission');
+  RemoveBlip(blip);
+  RemoveBlip(deliveryBlip);
   vanSpawned = cfg.locations.jobLocations.loc1.VanSpawned;
   vanDelivered = cfg.locations.jobLocations.loc1.VanDelivered;
   goonsSpawned = cfg.locations.jobLocations.loc1.GoonsSpawned;
