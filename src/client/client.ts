@@ -77,6 +77,7 @@ onNet('dfs_weaponTruckRobbery:UsableItem', async () => {
 
     if(Math.floor(Math.random() * 10) >= 3) { // 7% chance of success
       global.exports.mythic_notify.DoHudText('inform', 'USB connected successfully');
+      emitNet('dfs_weaponTruckRobbery:StartMissionLog');
       emit('dfs_weaponTruckRobbery:Main', 0, 500);
     } else {
       global.exports.mythic_notify.DoHudText('inform', 'USB has no information avaialable');
@@ -91,6 +92,7 @@ onNet('dfs_weaponTruckRobbery:UsableItem', async () => {
       global.exports.mythic_notify.DoHudText('inform', 'USB connected successfully');
       FreezeEntityPosition(playerPed, false);
       ClearPedTasks(playerPed);
+      emitNet('dfs_weaponTruckRobbery:StartMissionLog');
       emit('dfs_weaponTruckRobbery:Main', source);
     } else {
       global.exports.mythic_notify.DoHudText('inform', 'USB has no information avaialable');
@@ -228,7 +230,6 @@ on('esx:onPlayerDeath', (data) => {
 });
 
 on('dfs_weaponTruckRobbery:Reset', async () => { 
-  emitNet('dfs_weaponTruckRobbery:EndMission');
   RemoveBlip(blip);
   RemoveBlip(deliveryBlip);
   vanSpawned = cfg.locations.jobLocations.loc1.VanSpawned;
